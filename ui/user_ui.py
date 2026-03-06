@@ -11,13 +11,13 @@ class UserUI:
             choice = input("\nChoose: ")
 
             if choice == '1':
-                self.report_missing()
+                pass
             elif choice == '2':
-                self.check_status()
+                pass
             elif choice == '3':
-                self.view_all_reports()
+                pass
             elif choice == '4':
-                self.search_by_mark()
+                pass
             elif choice == '5':
                 break
 
