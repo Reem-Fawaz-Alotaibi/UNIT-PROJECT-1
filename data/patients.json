@@ -1,13 +1,1 @@
-[
-    {
-        "patient_id": "P-101",
-        "age": "90",
-        "gender": "Male",
-        "hair": "black",
-        "eye": "black",
-        "height": "170",
-        "marks": "None",
-        "date": "2002-10-12",
-        "location": "riydh"
-    }
-]
+[]
