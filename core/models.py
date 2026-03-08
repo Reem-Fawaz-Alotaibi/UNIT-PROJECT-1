@@ -1,5 +1,5 @@
 class UnknownPerson:
-    def __init__(self, patient_id, age, gender, hair, eye, height, marks, date, location):
+    def __init__(self, patient_id, age, gender, hair, eye, height, marks, date, location,status = "Not identified"):
         self.patient_id = patient_id    
         self.age = age                  
         self.gender = gender            
@@ -8,7 +8,9 @@ class UnknownPerson:
         self.height = height           
         self.marks = marks              
         self.date = date                
-        self.location = location        
+        self.location = location  
+        self.status = status
+      
 
     def to_dict(self):
         return {
@@ -20,5 +22,6 @@ class UnknownPerson:
             "height": self.height,
             "marks": self.marks,
             "date": self.date,
-            "location": self.location
+            "location": self.location,
+            "status": self.status
         }
