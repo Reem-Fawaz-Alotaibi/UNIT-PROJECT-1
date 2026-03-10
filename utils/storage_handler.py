@@ -41,6 +41,7 @@ def save_to_json(data, filename):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(existing_data, f, indent=4, ensure_ascii=False)
 
+            
 def overwrite_patients_file(updated_list, category):  
 
     file_path = os.path.join("data", f"{category}.json")

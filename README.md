@@ -1,44 +1,69 @@
-# UNIT-PROJECT-1
+# Reunite System
+## Overview
+
+Reunite System is a console-based application that helps reconnect missing individuals with their families. Public users can submit and view missing person reports, while hospital staff can register and manage unidentified patients. The main goal of the system is to quickly identify missing individuals by matching reports with hospital records and to improve communication between families and hospitals.
 
 
-## Based on what you’ve learned until now , create a project of your choosing (impress us with your imagination) . This project must at least satisfy the following minimum requirements :
+## Features & User Story
 
-- Must be interactive on CLI.
-- Use your coding skills in Python accurately.
-- Organize Your Code into modules & (or packages)
-- Use git & Github to track changes in your code.
+**User (Public) can:**
 
-## Example Project :  An online Grocery Store :
+- Submit a report about a missing person by entering their details such as name, age, gender, and physical characteristics.
 
-#### Overview : An online store that sells fruits to customers. This online store has 2 main users. The customer and the manager of the store . Each one of them should be able to do the following tasks for the store to function properly . 
+- View their submitted reports to check the information they previously reported.
 
-### Features & User Stories
-#### As a customer I should be able to do the following :
-- Browse  Products . 
-- View the product info (summary, specs, price, quantity , etc.)
-- Search for Products.
-- Get recommendations for my next purchase based on my purchase history.
-- Add Products to the shopping cart .
-- Remove a product from the shopping cart.
-- List the products in my shopping cart. 
-- Continue to checkout . 
-- Fill in my address for delivery.
-- Get receipt of my purchases.
-- Check delivery status . 
+- Exit the system after completing their actions.
 
+**Hospital staff can:**
 
+- Register an unknown patient by entering their physical description and other available details.
 
-#### Usage :
- Explain to the user how to use your project . 
- for example:
- - type in search product_name to search for a product.
- - type in list_products to show all the products in the grocery.
- - type in show product_name to get information about this product.
- - type in buy product_name to buy the product . 
- - and so on...
+- View all unknown patients currently recorded in the system.
+
+- Edit patient information if new details become available.
+
+- View all missing person reports submitted by users.
+
+- Search for a specific report to review its details.
+
+- Check for possible matches between missing person reports and unidentified patients.
+
+- Close a patient case when the person has been identified or reunited with their family.
 
 
-### For your project. Edit this README.md file to include your own project name,  overview, user stories, and usage. 
 
-### NOTE: before submitting the final project, please do the following command:
-`pip freeze > requirements.txt` to enable use to know & use the packages used in your project.
+## Usage
+**For Public Users:**
+
+- Start the system.
+
+- From the main menu, choose User Portal.
+
+- **Choose 1 :** Submit Report to report a missing person by entering their details.
+
+- **Choose 2 :** View My Reports to check previously submitted reports.
+
+- Repeat steps as needed or **choose 3 :** Back to Main Menu 
+
+**For Hospital Staff:**
+
+ - Start the system.
+
+- From the main menu, choose Hospital Portal.
+
+- **Choose 1 :** Register Unknown Patient to add a new unidentified patient.
+
+- **Choose 2 :** View All Unknown Patients to see all unknown patients.
+
+- **Choose 3 :** Edit Patient Information to update patient information if new details are available.
+
+- **Choose 4 :** View All Reports to review missing person reports submitted by the public.
+
+- **Choose 5 :** Search Specific Report to find a specific report.
+
+- **Choose 6 :** Check for Matches to find potential matches between reports and patients.
+
+- **Choose 7 :** Close Patient Case to close a patient case once identified.
+
+- Repeat steps as needed or **choose 8 :** Back to Main Menu 
+

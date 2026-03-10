@@ -1,168 +1,182 @@
 from core.models import UnknownPerson
 from utils.storage_handler import save_to_json, load_from_json ,overwrite_patients_file
 from datetime import datetime
-import re
-#-------------------
+from rich.console import Console
+from rich.table import Table
+from colorama import *
+
+init(autoreset=True)
+console = Console()
 
 class HospitalUI:
-    #
+      
     def access_hospital_portal(self):
-        """
-        Verifies hospital access code then opens hospital portal
-        """
-        print("\n---- Hospital Authentication ----")
+        print(Fore.BLUE + Back.WHITE + " ***** Hospital Authentication ***** " + Style.RESET_ALL)
         password = input("Enter Hospital Access Code: ")
         if password == "1234":
+            print(Fore.GREEN + Style.BRIGHT + "[SUCCESS] Logged in successfully")
             self.hospital_portal()
         else:
-            print("Access Denied!")
-    #
+            console.print("\n[ACCESS DENIED] Wrong code!", style="bold red")
+
     def register_patient(self):
-        """
-        Registers a new patient with auto-ID and validated physical traits
-        Saves the data to a JSON database with a default 'Not identified' status
-        """
-        print("\n" + "="*40)
-        print("--- Registering New Unknown Patient ---")
-        print("="*40)
+            """
+            Registers a new patient with auto-ID and validated physical traits
+            Saves the data to a JSON database with a default 'Not identified' status
+            """
 
-        patients = load_from_json("patients")
-        if patients:
-            last_id_num = int(patients[-1]['patient_id'].split('-')[1])
-            p_id = f"P-{last_id_num + 1}"
-        else:
-            p_id = "P-101"
+            header = " -- Registering New Unknown Patient -- "
+            print(Back.WHITE + Fore.BLUE + header + Style.RESET_ALL) 
 
-
-        while True:
-            try:
-                age = input("Enter approximate age (1-120): ").strip()
-                if not age.isdigit() or not (0 < int(age) < 120):
-                    raise ValueError("Age must be a number between 1 and 120")
-                break
-            except ValueError as e:
-                print(f"[ERROR] {e}")
-
-        while True:
-            try:
-                gender = input("Enter gender (Male/Female): ").strip().capitalize()
-                if gender not in ["Male", "Female"]:
-                    raise ValueError("Gender must be 'Male' or 'Female'")
-                break
-            except ValueError as e:
-                print(f"[ERROR] {e}")
-
-        while True:
-            try:
-                height = input("Enter height in cm (30-250): ").strip()
-                if not height.isdigit() or not (30 < int(height) < 250):
-                    raise ValueError("Height must be between 30 and 250 cm")
-                break
-            except ValueError as e:
-                print(f"[ERROR] {e}")
-
-        while True:
-            try:
-                hair = input("Enter hair color: ").strip()
-                if not hair:
-                    raise ValueError("Hair color cannot be empty")
-                if any(char.isdigit() for char in hair):
-                    raise ValueError("Hair color cannot contain numbers")
-                break
-            except ValueError as e:
-                print(f"[ERROR] {e}")
-
-        while True:
-            try:
-                eye = input("Enter eye color: ").strip()
-                if not eye:
-                    raise ValueError("Eye color cannot be empty")
-                if any(char.isdigit() for char in eye):
-                    raise ValueError("Eye color cannot contain numbers")
-                break
-            except ValueError as e:
-                print(f"[ERROR] {e}")
-
-        while True:
-            try:
-                date = input("Entry date (YYYY-MM-DD): ").strip()
-                datetime.strptime(date, '%Y-%m-%d')
-                break
-            except ValueError:
-                print("[ERROR] Invalid date format please use YYYY-MM-DD")
+            patients = load_from_json("patients")
+            if patients:
+                last_id_num = int(patients[-1]['patient_id'].split('-')[1])
+                p_id = f"P-{last_id_num + 1}"
+            else:
+                p_id = "P-101"
 
 
-        marks = input("Distinctive marks (e.g, scar, birthmarks , surgical marks , mole): ").strip()
-        if not marks:
-            marks = "None"
+            while True:
+                try:
+                    age = input("Enter approximate age (1-120): ").strip()
+                    if not age.isdigit() or not (0 < int(age) < 120):
+                        raise ValueError("Age must be a number between 1 and 120")
+                    break
+                except ValueError as e:
+                    print(f"[ERROR] {e}")
 
-        while True:
-            try:
-                location = input("Found location: ").strip()
-                if not location:
-                    raise ValueError("Location cannot be empty")
-                break
-            except ValueError as e:
-                print(f"[ERROR] {e}")
+            while True:
+                try:
+                    gender = input("Enter gender (Male/Female): ").strip().capitalize()
+                    if gender not in ["Male", "Female"]:
+                        raise ValueError("Gender must be 'Male' or 'Female'")
+                    break
+                except ValueError as e:
+                    print(f"[ERROR] {e}")
 
-        status = "Not identified"
-        new_person = UnknownPerson(
-            p_id,
-            age,
-            gender,
-            hair,
-            eye,
-            height,
-            marks,
-            date,
-            location,
-            status
-        )
+            while True:
+                try:
+                    height = input("Enter height in cm (30-250): ").strip()
+                    if not height.isdigit() or not (30 < int(height) < 250):
+                        raise ValueError("Height must be between 30 and 250 cm")
+                    break
+                except ValueError as e:
+                    print(f"[ERROR] {e}")
 
-        save_to_json(new_person.to_dict(), "patients")
+            while True:
+                try:
+                    hair = input("Enter hair color: ").strip()
+                    if not hair:
+                        raise ValueError("Hair color cannot be empty")
+                    if any(char.isdigit() for char in hair):
+                        raise ValueError("Hair color cannot contain numbers")
+                    break
+                except ValueError as e:
+                    print(f"[ERROR] {e}")
 
-        print("\n" + "*"*40)
-        print(f"[SUCCESS] Patient registered successfully!")
-        print(f"Assigning Patient ID: {p_id}")
-        print(f"Status: {status}")
-        print("*"*40)
-    #
+            while True:
+                try:
+                    eye = input("Enter eye color: ").strip()
+                    if not eye:
+                        raise ValueError("Eye color cannot be empty")
+                    if any(char.isdigit() for char in eye):
+                        raise ValueError("Eye color cannot contain numbers")
+                    break
+                except ValueError as e:
+                    print(f"[ERROR] {e}")
+
+            while True:
+                try:
+                    date = input("Entry date (YYYY-MM-DD): ").strip()
+                    datetime.strptime(date, '%Y-%m-%d')
+                    break
+                except ValueError:
+                    print("[ERROR] Invalid date format please use YYYY-MM-DD")
+
+
+            marks = input("Distinctive marks (e.g, scar, birthmarks , surgical marks , mole): ").strip()
+            if not marks:
+                marks = "None"
+
+            while True:
+                try:
+                    location = input("Found location: ").strip().upper()
+                    if not location:
+                        raise ValueError("Location cannot be empty")
+                    elif any(char.isdigit() for char in location):
+                        print("[ERROR] Location cannot contain numbers")
+                    else:
+                        break
+                except ValueError as e:
+                    print(f"[ERROR] {e}")
+
+            status = "Not identified"
+            new_person = UnknownPerson(
+                p_id,
+                age,
+                gender,
+                hair,
+                eye,
+                height,
+                marks,
+                date,
+                location,
+                status
+            )
+
+            save_to_json(new_person.to_dict(), "patients")
+
+            print(Fore.GREEN + Back.WHITE + "    [SUCCESS]   " + Style.RESET_ALL)
+            print(f"Patient registered successfully!")
+            print(f"Assigning Patient ID: {p_id}")
+            print(f"Status: {status}")
+    
+
     def view_all_patients(self):
         """
         Displays a formatted table of all unknown patient records
         """
         patients = load_from_json("patients")
         if not patients:
-            print("\n[INFO] No records found")
+            console.print("\n[INFO] No records found", style="yellow")
             return
-
-        print("\n" + "="*135)
-        print(f"{'ID':<7} | {'Age':<5} | {'Gender':<8} | {'Hair':<10} | {'Eyes':<8} | {'Height':<6} | {'Marks':<12} | {'Date':<15} | {'Location':<15} | {'status':<15}")
-        print("-" * 135)
+        
+        table = Table(title="Unknown Patients", title_style="bold white",border_style="blue")
+        table.add_column("ID", justify="center", width=13)
+        table.add_column("Age", justify="center", width=13)
+        table.add_column("Gender", justify="center", width=15)
+        table.add_column("Hair", justify="center", width=15)
+        table.add_column("Eyes", justify="center", width=10)
+        table.add_column("Height", justify="center", width=15)
+        table.add_column("Marks", justify="center", width=13)
+        table.add_column("Date", justify="center", width=12)
+        table.add_column("Location", justify="center", width=15)
+        table.add_column("Status", justify="center", width=15)
         
         for p in patients:
-            print(f"{p.get('patient_id','N/A'):<7} | "
-                  f"{p.get('age','N/A'):<5} | "
-                  f"{p.get('gender','N/A'):<8} | "
-                  f"{p.get('hair','N/A'):<10} | "
-                  f"{p.get('eye','N/A'):<8} | "
-                  f"{p.get('height','N/A'):<6} | "
-                  f"{p.get('marks','N/A'):<12} | "   
-                  f"{p.get('date','N/A'):<15} | " 
-                  f"{p.get('location','N/A'):<15} | " 
-                  f"{p.get('status','N/A')}")
+            table.add_row(
+                p.get('patient_id','N/A'),
+                str(p.get('age','N/A')),
+                p.get('gender','N/A'),
+                p.get('hair','N/A'),
+                p.get('eye','N/A'),
+                str(p.get('height','N/A')),
+                p.get('marks','N/A'),
+                p.get('date','N/A'),
+                p.get('location','N/A'),
+                p.get('status','N/A')
+            )
+
         
-        print("="*135)
-        print(f"Total unknown cases : {len(patients)}")
-        print("="*135)
-    #
+        console.print(table)
+        console.print(f"Total unknown cases: {len(patients)}", style="bold blue", highlight=False)
+    
     def edit_patient_information(self):
         """ 
         Modifies an existing patient record and display updated record
         """
-        print("\n" + "="*50)
-        print("--- Edit Patient Information ---")
-        print("="*50)
+
+        print(Fore.BLUE + Back.WHITE + " -- Edit Patient Information -- " + Style.RESET_ALL)
 
         try:
             p_id = input("Enter Patient ID (e.g , P-101): ").strip().upper()
@@ -170,69 +184,87 @@ class HospitalUI:
             patient = next((p for p in patients if p['patient_id'] == p_id), None)
             
             if not patient:
-                print(f"[ERROR] ID {p_id} not found")
+                console.print(f"[ERROR] ID {p_id} not found", style="bold red")
                 return
 
-            print("\n---- Current Data -----")
-            print(f"1. Age: {patient['age']}")
-            print(f"2. Gender: {patient['gender']}")
-            print(f"3. Height: {patient['height']}")
-            print(f"4. Hair: {patient['hair']}")
-            print(f"5. Eye: {patient['eye']}")
-            print(f"6. Location: {patient['location']}")
-            print(f"7. Marks: {patient['marks']}")
-            print(f"8. Date: {patient['date']}")
-            print("0. Save and Exit")
+            table_current = Table(title="Current Data", border_style="bold blue")
 
-            keys = {"1":"age", "2":"gender", "3":"height", "4":"hair", "5":"eye", "6":"location", "7":"marks", "8":"date"}
+            table_current.add_column("ID", justify="center")
+            table_current.add_column("1-Age", justify="center")
+            table_current.add_column("2-Gender", justify="center")
+            table_current.add_column("3-Hair", justify="center")
+            table_current.add_column("4-Eyes", justify="center")
+            table_current.add_column("5-Height", justify="center")
+            table_current.add_column("6-Marks", justify="center")
+            table_current.add_column("7-Entry date", justify="center")
+            table_current.add_column("8-Location", justify="center")
+            table_current.add_column("Status", justify="center")
+
+            table_current.add_row(
+                str(patient.get("patient_id")),
+                str(patient.get("age")),
+                str(patient.get("gender")),
+                str(patient.get("hair")),
+                str(patient.get("eye")),
+                str(patient.get("height")),
+                str(patient.get("marks")),
+                str(patient.get("date")),
+                str(patient.get("location")),
+                str(patient.get("status", "Unknown"))
+            )
+
+            console.print(table_current)
+
+            keys = {"1":"age", "2":"gender", "3":"hair", "4":"eyes", "5":"height", 
+                    "6":"marks", "7":"date", "8":"location"}
             editing = True
 
             while editing:
-                choice = input("\nSelect number to edit (0-8): ").strip()
+                choice = input("\nSelect number to edit (1-8): ").strip()
                 if choice == "0":
                     break
                 if choice not in keys:
-                    print("[ERROR] Invalid choice please pick 0-8")
+                    console.print("[ERROR] Invalid choice please pick 1-8", style="bold red")
                     continue
 
                 target_key = keys[choice]
 
                 while True:
                     new_val = input(f"Enter new value for {target_key}: ").strip()
-                    if not new_val:
-                        print("[ERROR] Input cannot be empty")
+                    current_val = str(patient.get(target_key)).lower()
+                    if new_val.lower() == current_val:
+                        console.print("[WARNING] The value is the same as the current one. No change made.", style="bold red")
                         continue
 
                     if target_key == "age":
                         if not new_val.isdigit() or not (0 < int(new_val) <= 120):
-                            print("[ERROR] Age must be a number between 1 and 120!")
+                            console.print("[ERROR] Age must be a number between 1 and 120!", style="bold red")
                             continue
 
                     elif target_key == "gender":
-                        if new_val.lower() not in ["male", "female"]:
-                            print("[ERROR] Gender must be 'male' or 'female' only!")
+                        if new_val.capitalize() not in ["male", "female"]:
+                            console.print("[ERROR] Gender must be 'male' or 'female' only!", style="bold red")
                             continue
 
                     elif target_key == "height":
                         if not new_val.isdigit() or not (100 <= int(new_val) <= 250):
-                            print("[ERROR] Height must be a number between 100 and 250!")
+                            console.print("[ERROR] Height must be a number between 100 and 250!", style="bold red")
                             continue
 
                     elif target_key in ["hair", "eye", "location", "marks"]:
                         if any(char.isdigit() for char in new_val):
-                            print(f"[ERROR] {target_key.capitalize()} should not contain numbers!")
+                            console.print(f"[ERROR] {target_key.capitalize()} should not contain numbers!", style="bold red")
                             continue
 
                     elif target_key == "date":
                         try:
-                            from datetime import datetime
                             datetime.strptime(new_val, "%Y-%m-%d")
                         except ValueError:
-                            print("[ERROR] Date must be in YYYY-MM-DD format!")
+                            console.print("[ERROR] Entry date must be in YYYY-MM-DD format!", style="bold red")
                             continue
 
                     patient[target_key] = new_val
-                    print(f"[SUCCESS] {target_key} updated successfully")
+                    console.print(f" [SUCCESS] {target_key} updated successfully", style="bold green")
                     break
 
                 while True:
@@ -243,75 +275,90 @@ class HospitalUI:
                         editing = False
                         break
                     else:
-                        print("[ERROR] Please type 'y' or 'n' only")
+                        console.print("[ERROR] Please type 'y' or 'n' only", style="bold red")
 
             overwrite_patients_file(patients, "patients")
 
-            print("\n" + "*"*45)
-            print(" [DONE] FINAL UPDATED DATA ")
-            print("*"*45)
-            print(f"{'FIELD':<20} | {'VALUE'}")
-            print("-" * 40)
-            display_map = [
-                ("Patient ID", "patient_id"), 
-                ("Age", "age"), 
-                ("Gender", "gender"),
-                ("Height", "height"), 
-                ("Hair Color", "hair"), 
-                ("Eye Color", "eye"),
-                ("Location", "location"),
-                ("Marks", "marks"), 
-                ("Date", "date")
-            ]
-            
-            for key, value in display_map:
-                print(f"{key:<20} | {patient.get(value)}")
-            print("-" * 40)
+            table_final = Table(title="Updated Data ", border_style="bold blue")
+
+            table_final.add_column("ID", justify="center")
+            table_final.add_column("Age", justify="center")
+            table_final.add_column("Gender", justify="center")
+            table_final.add_column("Hair", justify="center")
+            table_final.add_column("Eyes", justify="center")
+            table_final.add_column("Height", justify="center")
+            table_final.add_column("Marks", justify="center")
+            table_final.add_column("Entry date", justify="center")
+            table_final.add_column("Location", justify="center")
+            table_final.add_column("Status", justify="center")
+
+            table_final.add_row(
+                str(patient.get("patient_id")),
+                str(patient.get("age")),
+                str(patient.get("gender")),
+                str(patient.get("hair")),
+                str(patient.get("eye")),
+                str(patient.get("height")),
+                str(patient.get("marks")),
+                str(patient.get("date")),
+                str(patient.get("location")),
+                str(patient.get("status", "Unknown"))
+            )
+
+            console.print(table_final)
 
         except Exception as e:
-            print(f"\n[CRITICAL ERROR] {e}")
-    #
+            console.print(f"\n[ERROR] {e}", style="bold red")
+    
+
     def view_all_reports(self):
         """
         Displays all submitted missing person reports 
         """
-        print("\n" + "="*145)
-        print(f"{'--- user submitted missing person reports ---':^145}")
-        print("="*145)
+      
 
         reports = load_from_json("missing_reports")
 
         if not reports:
-            print(f"{'[INFO] No reports have been submitted by users yet':^145}")
+            console.print("[INFO] No reports have been submitted by users yet", style="yellow")
             return
 
-        header = (f"{'Rep. ID':<8} | {'Age':<5} | {'Gender':<8} | {'Hair':<10} | "
-                  f"{'Eyes':<8} | {'Height':<6} | {'Date Sub.':<12} | {'Status':<10} | "
-                  f"{'Last Seen Location'}")
-        
-        print(header)
-        print("-" * 145)
+        table = Table(title="Missing Reports", border_style="bold blue")
+
+        table.add_column("Rep. ID", justify="center")
+        table.add_column("Age", justify="center")
+        table.add_column("Gender", justify="center")
+        table.add_column("Hair", justify="center")
+        table.add_column("Eyes", justify="center")
+        table.add_column("Height", justify="center")
+        table.add_column("Date Submitted", justify="center")
+        table.add_column("Status", justify="center")
+        table.add_column("Last Seen Location", justify="center")
 
         for r in reports:
-            print(f"{r.get('report_id', 'N/A'):<8} | "
-                  f"{r.get('age', 'N/A'):<5} | "
-                  f"{r.get('gender', 'N/A'):<8} | "
-                  f"{r.get('hair', 'N/A'):<10} | "
-                  f"{r.get('eye', 'N/A'):<8} | "
-                  f"{r.get('height', 'N/A'):<6} | "
-                  f"{r.get('date_submitted', 'N/A'):<12} | "
-                  f"{r.get('status', 'Pending'):<10} | "
-                  f"{r.get('last_seen', 'N/A')}")
-        
-        print("-" * 145)
+            table.add_row(
+                str(r.get("report_id", "N/A")),
+                str(r.get("age", "N/A")),
+                str(r.get("gender", "N/A")),
+                str(r.get("hair", "N/A")),
+                str(r.get("eye", "N/A")),
+                str(r.get("height", "N/A")),
+                str(r.get("date_submitted", "N/A")),
+                str(r.get("status", "Pending")),
+                str(r.get("last_seen", "N/A"))
+            )
 
-    #
+        console.print(table)
+        console.print(f"Total Missing Reports: {len(reports)}", style="bold blue", highlight=False)
+
+
     def view_specific_report(self):
         """
         display a single patient's full details by ID.
         """
-        print("\n" + "-"*40)
-        report_id_to_find = input("Enter report ID to search (e.g., R-101): ").strip().upper()
+        console = Console()
+        print(Fore.BLUE + Back.WHITE + " ---------------------------------- " + Style.RESET_ALL)
+        report_id_to_find = input("Enter report ID to search (e.g , R-101): ").strip().upper()
         
         reports = load_from_json("missing_reports")
         
@@ -322,22 +369,33 @@ class HospitalUI:
                 break
         
         if found_report:
-            print("\n" + "="*50)
-            print(f"--- DETAILS FOR REPORT: {report_id_to_find} ---")
-            print("="*50)
-            print(f"Age:            {found_report.get('age')}")
-            print(f"Gender:         {found_report.get('gender')}")
-            print(f"Hair Color:     {found_report.get('hair')}")
-            print(f"Eye Color:      {found_report.get('eye')}")
-            print(f"Height:         {found_report.get('height')} cm")
-            print(f"Last Seen:      {found_report.get('last_seen')}")
-            print(f"Marks:          {found_report.get('marks')}")
-            print(f"Date Submitted: {found_report.get('date_submitted')}")
-            print(f"Current Status: {found_report.get('status')}")
-            print("="*50)
+            table = Table(title=f"Report Details: {report_id_to_find}", show_lines=True, style="cyan")
+
+            fields = ["ID Number", "Phone Number", "Age", "Gender", "Hair Color", 
+                    "Eye Color", "Height (cm)", "Last Seen", "Marks", "Date Submitted", "Current Status"]
+
+            for field in fields:
+                table.add_column(field, style="bold white", justify="center")
+
+            table.add_row(
+                found_report.get('user_id', "N/A"),
+                found_report.get('phone', "N/A"),
+                str(found_report.get('age')),
+                found_report.get('gender'),
+                found_report.get('hair'),
+                found_report.get('eye'),
+                str(found_report.get('height')),
+                found_report.get('last_seen'),
+                found_report.get('marks'),
+                found_report.get('date_submitted'),
+                found_report.get('status')
+            )
+
+            console.print(table)
         else:
-            print(f"\n[ERROR] Report ID '{report_id_to_find}' not found")
-    #
+            console.print(f"[bold red]\n[ERROR][/bold red] Report ID '{report_id_to_find}' not found")   
+        
+    
     def check_matching_report(self):
         """
         Matches a specific patient against the missing persons database 
@@ -358,13 +416,22 @@ class HospitalUI:
                 print("Patient not found")
                 return
 
-            print("\nPatient Data:")
-            print("Age:", patient["age"])
-            print("Gender:", patient["gender"])
-            print("Height:", patient["height"])
-            print("Hair:", patient["hair"])
-            print("Eye:", patient["eye"])
-            print("Marks:", patient["marks"])
+            table = Table(title="Patient Data", show_lines=True, style="cyan")
+    
+            fields = ["Age", "Gender", "Height", "Hair", "Eye", "Marks"]
+            for field in fields:
+                table.add_column(field, style="bold white", justify="center")
+            
+            table.add_row(
+                str(patient.get("age", "N/A")),
+                patient.get("gender", "N/A"),
+                str(patient.get("height", "N/A")),
+                patient.get("hair", "N/A"),
+                patient.get("eye", "N/A"),
+                patient.get("marks", "N/A")
+            )
+            
+            console.print(table)
 
             reports = load_from_json("missing_reports")
             fields = ["age","gender","height","hair","eye","marks"]
@@ -414,6 +481,7 @@ class HospitalUI:
 
         except Exception as e:
             print("[ERROR]", e)
+
 
     def close_case(self):
         """
@@ -486,15 +554,16 @@ class HospitalUI:
      Displays the hospital menu and handles navigation 
      """
      while True:
-            print("\n---- Hospital Portal ----")
-            print("1- Register Unknown Patient")
-            print("2- View All Unknown Patients")
-            print("3- Edit Patient Information")
-            print("4- View All Reports")
-            print("5- Search Specific Report")
-            print("6- Check for Matches")   
-            print("7- Close Patient Case")
-            print("8- Back to Main Menu")
+
+            print(Fore.BLUE + Back.WHITE + "  ▌ Hospital Portal ▐  " + Style.RESET_ALL)
+            print(Fore.BLUE + "1- Register Unknown Patient" + Style.RESET_ALL)
+            print(Fore.BLUE + "2- View All Unknown Patients" + Style.RESET_ALL)
+            print(Fore.BLUE + "3- Edit Patient Information" + Style.RESET_ALL)
+            print(Fore.BLUE + "4- View All Reports" + Style.RESET_ALL)
+            print(Fore.BLUE + "5- Search Specific Report" + Style.RESET_ALL)
+            print(Fore.BLUE + "6- Check for Matches" + Style.RESET_ALL)   
+            print(Fore.BLUE + "7- Close Patient Case" + Style.RESET_ALL)
+            print(Fore.BLUE + "8- Back to Main Menu" + Style.RESET_ALL)
 
             choice = input("\nChoose: ")
             

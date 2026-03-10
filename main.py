@@ -1,6 +1,8 @@
 import sys
 from ui.hospital_ui import HospitalUI
 from ui.user_ui import UserUI
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 
 def main_menu():
     """
@@ -10,12 +12,14 @@ def main_menu():
     user_ui = UserUI()
 
     while True:
-        print("\n====  Welcome To Reunite System  ====")
-        print("1- Hospital Portal (Staff Only)")
-        print("2- User Portal (Public)")
-        print("3- Exit")
-        
-        choice = input("\nChoose an option: ")
+
+        print(Fore.BLUE + Back.WHITE + " ▌   Welcome To Reunite System    ▐ " + Style.RESET_ALL)
+        print(Fore.BLUE +"1- Hospital Portal (Staff Only) " + Style.RESET_ALL)
+        print(Fore.BLUE +"2- User Portal (Public)" + Style.RESET_ALL)
+        print(Fore.BLUE +"3- Exit " + Style.RESET_ALL)
+
+
+        choice = input("Choose an option: ")
         if choice == '1':
            hospital_ui.access_hospital_portal()
         elif choice == '2':
@@ -24,7 +28,10 @@ def main_menu():
            print("Exiting... Stay safe!")
            sys.exit()
         else:
-            print(" Invalid choice please try again ")
+            print(" \nInvalid choice please try again ")
 
 if __name__ == "__main__":
-    main_menu()
+   try:
+        main_menu()
+   except KeyboardInterrupt:
+        print("\n\nSystem stopped by user.")
